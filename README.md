@@ -276,8 +276,35 @@ npm run dev              # http://localhost:5173 (/api 요청은 8080 으로 프
 | 6. 모바일·문서 | 모바일 레이아웃 개선(학생 상단 메뉴 3칸, 교사 탭 한 줄, 표 → 카드), README 현재 상태(로컬 전용)·변경 이력 정리 |
 | 7. 공용 DB | Supabase 연결용 `remote` 프로필, V2 마이그레이션(RLS·시간 기본값·테이블/컬럼 설명), DB 운영 가이드·사람별 계정 SQL (`docs/`) |
 
-## 다음 단계 (예정)
+## 추후 작업
 
-- Docker Desktop 사용 가능한 환경에서 `docker compose up` 실제 실행 검증
-- 서버 배포 (호스팅 선택, 도메인·HTTPS, 운영용 비밀번호·JWT 키 설정)
-- 파일럿 운영 후 교사용 지표(과제 정확도, 다음 도전 참여) 화면 보강
+### 1. 공용 DB (Supabase) 연결 마무리 — 우선
+Supabase 프로젝트(`class-task-monster`, Seoul)는 생성되어 있고 코드 준비(`remote` 프로필, V2 마이그레이션, 문서)도 끝났습니다. **실제 연결은 아직 확인하지 않았습니다.**
+- [ ] 대시보드 **Connect → Direct → Type: JDBC, Method: Session pooler** 값을 루트 `.env` 의 `DB_URL` / `DB_USERNAME` / `DB_PASSWORD` 에 입력 ([docs/DATABASE.md](docs/DATABASE.md) 1-2)
+- [ ] `./gradlew bootRun --args='--spring.profiles.active=remote'` 로 실행 → Flyway V1, V2 적용 확인 (대시보드 Last migration 표시)
+- [ ] Supabase SQL Editor 에서 최초 1회: `ALTER TABLE public.flyway_schema_history ENABLE ROW LEVEL SECURITY;`
+- [ ] 시연 데이터가 필요하면 첫 실행만 `SEED_DATA=true`
+- [ ] DBeaver 연결 (SSL require, Connection type: Production) 후 `docs/sql/maintenance.sql` 동작 확인
+- [ ] 여러 사람이 관리한다면 `docs/db-roles.sql` 로 사람별 계정(수정용·조회용) 발급
+- [ ] Supabase 대시보드의 GitHub 연동은 사용하지 않음 (스키마는 Flyway 로만 관리)
+- [ ] 개발용 / 실제 학생용 Supabase 프로젝트 분리 검토
+
+### 2. 배포
+- [ ] Docker Desktop 을 쓸 수 있는 환경(BIOS VT-x + WSL2)에서 `docker compose up -d --build` 실제 실행 검증
+- [ ] 호스팅 선택 (백엔드: 컨테이너 호스팅 / 프론트엔드: 정적 호스팅 또는 nginx 컨테이너), DB 는 Supabase 사용
+- [ ] 운영용 값 설정: 새 `JWT_SECRET`(32바이트 이상), DB 비밀번호, `CORS_ALLOWED_ORIGINS`, `SEED_DATA=false`
+- [ ] 도메인·HTTPS 연결
+- [ ] 정기 백업 (`pg_dump`, [docs/DATABASE.md](docs/DATABASE.md) 6장) 절차 정하기
+
+### 3. 기능 보강 (파일럿 운영 후)
+- [ ] 교사용 분석 화면: 과제 수행 정확도, 다음 도전 참여 여부 (현재는 학생 탭 지표 + `maintenance.sql` 분석 쿼리)
+- [ ] 과제 일괄 지정 (여러 학생에게 같은 과제)
+- [ ] 표현 미션 미리 여러 날 등록 / 지난 미션 복사
+- [ ] 성장 단계 기준(알 10 / 아기 30)과 먹이당 에너지를 반별로 설정
+- [ ] 학생 비밀번호 초기화 안내 흐름 (현재는 교사가 학생 탭에서 직접 변경)
+
+### 4. 기술 부채
+- [ ] JWT Refresh Token (현재 Access Token 12시간 만료 시 재로그인)
+- [ ] 프론트엔드 테스트(컴포넌트·E2E) 추가 — 현재는 백엔드 통합 테스트만 있음
+- [ ] `gradlew localDb` 안내 문구가 일부 터미널에서 한글이 깨져 보이는지 확인
+- [ ] GitHub Actions 로 `./gradlew test` · `npm run build` 자동 실행 (PR 마다)
