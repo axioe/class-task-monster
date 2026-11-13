@@ -30,7 +30,7 @@
 |---|---|
 | Backend | Java 21, Spring Boot 3.5, Spring Security, JWT(jjwt), Spring Data JPA, Gradle |
 | Database | H2 (개발용, DB 확정 전까지) — JPA 기반이라 드라이버/설정만 바꾸면 교체 가능 |
-| Frontend | React (Vite) — 작업 예정 |
+| Frontend | React 19, Vite 7, React Router 7, axios |
 
 ## 프로젝트 구조
 
@@ -47,10 +47,47 @@ class-task-monster/
 │     ├─ config/                  # 보안·CORS·JPA·시간 설정, 개발용 샘플 데이터
 │     ├─ exception/               # 에러 코드, 공통 예외 처리
 │     └─ util/
-└─ frontend/                      # React 클라이언트 (작업 예정)
+└─ frontend/                      # React 클라이언트
+   └─ src/
+      ├─ api/                     # axios 클라이언트(JWT 헤더 자동 첨부), API 모듈
+      ├─ context/                 # 로그인 상태 (AuthContext)
+      ├─ routes/                  # 역할별 접근 제어
+      ├─ components/              # 공통 / 몬스터(SVG) / 학생 화면 컴포넌트
+      ├─ pages/                   # 로그인, 학생(메인·나의 과제·성장 기록), 교사(반 목록·반 관리 탭)
+      ├─ styles/                  # 디자인 토큰, 화면별 스타일
+      └─ utils/
 ```
 
-## 실행 방법 (Backend)
+## 화면 구성
+
+**학생 메인 (시안 기준)**
+| 영역 | 내용 |
+|---|---|
+| 상단 | 서비스 이름, 반 이름, 학생 별명(로그아웃) |
+| 왼쪽 | 우리 반 몬스터 / 나의 과제 / 성장 기록 |
+| 중앙 | 공동 몬스터와 말풍선, 성장 에너지(예: 18 / 30), 알 → 아기 → 성장 단계 |
+| 오른쪽 위 | ○○의 오늘 도전: 과제 카드와 교사 확인 상태, "다 했어요!"(확인 요청) |
+| 오른쪽 아래 | 내 먹이, 오늘의 표현 미션, 함께 말할 표현 선택, 먹이 주기 |
+| 하단 | 우리 반 성장 소식 |
+
+**교사 관리**: 내 반 목록·만들기 → 반 관리 탭 (확인 대기 / 과제 지정 / 학생 / 표현 미션 / 반 설정)
+
+## 실행 방법
+
+백엔드와 프론트엔드를 각각 실행한 뒤 http://localhost:5173 에 접속합니다.
+
+### Frontend (Node.js 22 이상)
+
+```bash
+cd frontend
+npm install
+npm run dev              # http://localhost:5173 (/api 요청은 8080 으로 프록시)
+```
+
+- 배포 빌드: `npm run build` → `frontend/dist`
+- 백엔드가 다른 주소라면 `VITE_API_BASE_URL` 환경 변수로 지정
+
+### Backend
 
 ```bash
 cd backend

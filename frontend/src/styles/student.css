@@ -1,0 +1,752 @@
+/* ===== 학생 화면 레이아웃 ===== */
+.student-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 24px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--border);
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.class-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--primary-soft);
+  color: var(--primary-ink);
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  border-radius: 999px;
+  padding: 8px 18px;
+}
+
+.student-body {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+}
+
+.side-nav {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 20px 12px;
+  background: linear-gradient(180deg, #f1e9ff 0%, #ebe1fd 70%, #dff2e6 100%);
+  border-right: 1px solid var(--border);
+}
+
+.side-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  color: var(--text);
+  text-decoration: none;
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  transition: background 0.15s;
+}
+
+.side-nav-item:hover {
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.side-nav-item.active {
+  background: var(--primary);
+  color: #fff;
+  box-shadow: 0 4px 0 var(--primary-strong);
+}
+
+.side-nav-icon {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.side-nav-deco {
+  margin-top: auto;
+  font-size: 1.4rem;
+  text-align: center;
+  opacity: 0.8;
+}
+
+.student-main {
+  padding: 22px;
+  min-width: 0;
+}
+
+/* ===== 메인 화면 그리드 ===== */
+.student-home {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(320px, 1fr);
+  grid-template-areas:
+    'monster side'
+    'news news';
+  gap: 20px;
+}
+
+.monster-card {
+  grid-area: monster;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 14px;
+}
+
+.student-side {
+  grid-area: side;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.news-banner {
+  grid-area: news;
+}
+
+/* ===== 몬스터 장면 ===== */
+.monster-scene {
+  position: relative;
+  flex: 1;
+  min-height: 360px;
+  border-radius: 20px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 18px 18px 6px;
+  background:
+    radial-gradient(ellipse 120% 45% at 50% 105%, #b7e19a 0 60%, transparent 61%),
+    radial-gradient(ellipse 70% 30% at 15% 92%, #c8eaa9 0 60%, transparent 61%),
+    radial-gradient(ellipse 70% 30% at 85% 92%, #c8eaa9 0 60%, transparent 61%),
+    linear-gradient(180deg, #f9f6ff 0%, #eef8ef 100%);
+}
+
+.monster-heading {
+  position: absolute;
+  top: 18px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: clamp(1.4rem, 2.6vw, 2rem);
+  z-index: 2;
+}
+
+.monster-name {
+  display: inline-block;
+  background: var(--primary-soft);
+  color: var(--primary-ink);
+  border-radius: 999px;
+  padding: 2px 18px;
+  font-size: 1.15em;
+}
+
+.scene-deco {
+  position: absolute;
+  font-size: 2rem;
+  pointer-events: none;
+}
+
+.scene-tree {
+  top: -6px;
+  left: -8px;
+  font-size: 4.5rem;
+  opacity: 0.85;
+}
+
+.scene-flowers {
+  bottom: 18px;
+  left: 18px;
+}
+
+.scene-fence {
+  bottom: 22px;
+  right: 18px;
+}
+
+.speech-bubble {
+  position: absolute;
+  top: 76px;
+  right: 8%;
+  max-width: 180px;
+  background: #fff;
+  border: 2.5px solid var(--primary);
+  border-radius: 50%;
+  padding: 16px 18px;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  z-index: 2;
+}
+
+.speech-bubble::after {
+  content: '';
+  position: absolute;
+  left: 18px;
+  bottom: -10px;
+  width: 18px;
+  height: 18px;
+  background: #fff;
+  border-left: 2.5px solid var(--primary);
+  border-bottom: 2.5px solid var(--primary);
+  transform: rotate(-35deg) skewX(10deg);
+}
+
+.scene-monster {
+  position: relative;
+  z-index: 1;
+  max-width: 70%;
+  height: auto;
+  animation: float 3.2s ease-in-out infinite;
+}
+
+.scene-monster.is-bouncing {
+  animation: bounce 0.8s ease-in-out 2;
+}
+
+/* ===== 성장 에너지 ===== */
+.energy {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 0 8px;
+}
+
+.energy-label {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  white-space: nowrap;
+}
+
+.energy-track {
+  flex: 1;
+  height: 32px;
+  background: #e6e1ef;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.energy-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #a07af5, var(--primary));
+  color: #fff;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  transition: width 0.6s ease;
+}
+
+/* ===== 성장 단계 ===== */
+.stage-track {
+  list-style: none;
+  margin: 0;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background: var(--surface-soft);
+  border-radius: 18px;
+}
+
+.stage-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.stage-item.is-locked svg {
+  filter: grayscale(0.6);
+  opacity: 0.5;
+}
+
+.stage-label {
+  font-family: var(--font-display);
+  background: var(--primary-soft);
+  color: var(--primary-ink);
+  border-radius: 999px;
+  padding: 2px 16px;
+}
+
+.stage-item.is-current .stage-label {
+  background: var(--primary);
+  color: #fff;
+}
+
+.stage-arrow {
+  color: var(--border-strong);
+  font-size: 2rem;
+}
+
+/* ===== 오늘 도전 ===== */
+.challenge-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.challenge-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: var(--surface-soft);
+}
+
+.challenge-item.status-approved {
+  background: #eef9f0;
+}
+
+.challenge-icon {
+  font-size: 1.5rem;
+}
+
+.challenge-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.challenge-text strong {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.15rem;
+}
+
+.challenge-comment {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.challenge-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.more-link {
+  display: inline-block;
+  margin-top: 12px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+/* ===== 먹이 ===== */
+.food-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.food-card .card-title {
+  margin-bottom: 0;
+}
+
+.food-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+
+.food-tile {
+  display: grid;
+  place-items: center;
+  width: 82px;
+  height: 82px;
+  font-size: 2.6rem;
+  background: var(--surface-soft);
+  border: 2px solid var(--border-strong);
+  border-radius: 20px;
+  box-shadow: 0 4px 0 var(--border-strong);
+}
+
+.food-more {
+  font-size: 1.2rem;
+  font-family: var(--font-display);
+  color: var(--primary-ink);
+}
+
+.mission-box {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mission-situation {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+}
+
+.mission-tag {
+  background: var(--highlight);
+  border-radius: 8px;
+  padding: 2px 8px;
+  font-size: 0.85rem;
+}
+
+.expression-select {
+  font-size: 1.15rem;
+  padding: 12px 14px;
+}
+
+.feed-button {
+  width: 100%;
+  font-size: 1.7rem;
+}
+
+/* ===== 성장 소식 배너 ===== */
+.news-banner {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 14px 24px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  background:
+    radial-gradient(ellipse 40% 60% at 100% 100%, #d5efc0 0 60%, transparent 61%),
+    linear-gradient(90deg, #f3fbf3, #fbf9ff);
+}
+
+.news-title {
+  font-size: 1.7rem;
+  white-space: nowrap;
+  padding-right: 24px;
+  border-right: 2px solid var(--border-strong);
+}
+
+.news-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 1.15rem;
+}
+
+.news-main mark {
+  background: linear-gradient(transparent 55%, var(--highlight) 55%);
+  font-weight: 700;
+}
+
+.news-sub {
+  color: var(--text-muted);
+}
+
+.news-monster {
+  flex-shrink: 0;
+}
+
+/* ===== 하위 페이지 공통 ===== */
+.page-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.page-header h1 {
+  font-size: 2rem;
+}
+
+.assignment-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.assignment-card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.assignment-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.assignment-card-head h3 {
+  font-size: 1.3rem;
+}
+
+.assignment-card-foot {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: space-between;
+  font-size: 0.9rem;
+}
+
+.note-box {
+  background: var(--surface-soft);
+  border-radius: 12px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.note-teacher {
+  background: var(--success-soft);
+}
+
+.note-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.growth-summary {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.growth-summary-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.growth-summary-text .energy {
+  padding: 0;
+}
+
+.growth-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 18px;
+  border-left: 3px solid var(--primary-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.timeline li {
+  position: relative;
+}
+
+.timeline li::before {
+  content: '';
+  position: absolute;
+  left: -26px;
+  top: 6px;
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background: var(--primary);
+  border: 3px solid #fff;
+}
+
+.timeline time,
+.feeding-list time {
+  font-size: 0.85rem;
+}
+
+.feeding-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.feeding-list li {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: var(--surface-soft);
+}
+
+.feeding-list li.is-success {
+  background: #eef9f0;
+}
+
+.feeding-list p {
+  font-size: 0.85rem;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ===== 반응형 ===== */
+@media (max-width: 1100px) {
+  .student-home {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'monster'
+      'side'
+      'news';
+  }
+}
+
+@media (max-width: 760px) {
+  .app-header {
+    padding: 8px 16px;
+  }
+
+  .brand-title {
+    font-size: 1.25rem;
+  }
+
+  .brand svg {
+    width: 40px;
+    height: 40px;
+  }
+
+  .class-badge {
+    display: none;
+  }
+
+  .student-body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .side-nav {
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 10px 16px;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .side-nav-item {
+    flex-shrink: 0;
+    font-size: 1rem;
+    padding: 8px 12px;
+  }
+
+  .side-nav-deco {
+    display: none;
+  }
+
+  .student-main {
+    padding: 16px;
+  }
+
+  .monster-scene {
+    min-height: 300px;
+  }
+
+  .scene-tree {
+    display: none;
+  }
+
+  .speech-bubble {
+    top: 64px;
+    right: 4%;
+    font-size: 0.95rem;
+    max-width: 130px;
+    padding: 10px 12px;
+  }
+
+  .energy {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+  }
+
+  .stage-track svg {
+    width: 54px;
+    height: 54px;
+  }
+
+  .news-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 16px;
+  }
+
+  .news-title {
+    border-right: none;
+    padding-right: 0;
+    font-size: 1.4rem;
+  }
+
+  .news-monster {
+    align-self: flex-end;
+    width: 80px;
+    height: 80px;
+  }
+
+  .growth-columns {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .growth-summary {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .growth-summary svg {
+    align-self: center;
+  }
+}
