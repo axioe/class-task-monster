@@ -17,6 +17,7 @@
 |---|---|
 | 로컬 실행 (H2 / 로컬 PostgreSQL 17) | ✅ 동작 확인 (학생·교사 화면, 데스크톱·모바일) |
 | 자동 테스트 (H2 + PostgreSQL 17.11) | ✅ 통과 |
+| 공용 DB (Supabase PostgreSQL, Seoul) | 🔧 프로젝트 생성·`remote` 프로필 준비 완료 — 운영 가이드: [docs/DATABASE.md](docs/DATABASE.md) |
 | Docker Compose 구성 (`docker-compose.yml`, Dockerfile) | 📝 작성 완료 · **실제 컨테이너 실행은 미검증** (개발 PC 에 Docker 미설치) |
 | 서버 배포 / 도메인 / HTTPS | ⏳ 진행 전 |
 
@@ -162,6 +163,16 @@ cd frontend && npm run dev
 - 터미널을 닫아 DB 가 백그라운드에 남았다면: `./gradlew localDbStop`
 - `local` 프로필이므로 Docker 의 `db` 서비스(방법 B)와 같은 설정으로 접속합니다. (둘 다 5432 포트라 동시에 실행하지 않기)
 
+### D. 공용 DB(Supabase)에 붙여 실행 (`remote` 프로필)
+
+여러 사람이 같은 데이터를 보고 관리할 때 사용합니다. 접속 정보 입력 방법·**DBeaver 연결**·테이블 설명·수정 규칙·백업은 **[docs/DATABASE.md](docs/DATABASE.md)**, 바로 실행할 수 있는 관리용 SQL 은 **[docs/sql/maintenance.sql](docs/sql/maintenance.sql)** 에 있습니다. (관리용 SQL 은 `MaintenanceSqlTest` 가 실제 스키마에서 실행되는지 자동 검사)
+
+```bash
+# .env 에 DB_URL / DB_USERNAME / DB_PASSWORD 입력 후
+cd backend && ./gradlew bootRun --args='--spring.profiles.active=remote'
+cd frontend && npm run dev
+```
+
 ### C. H2 로 빠르게 실행 (기본 `dev` 프로필)
 
 ```bash
@@ -192,6 +203,7 @@ npm run dev              # http://localhost:5173 (/api 요청은 8080 으로 프
 |---|---|---|---|
 | `dev` (기본) | H2 인메모리 (PostgreSQL 호환 모드) | JPA 자동 생성 | O |
 | `local` | localhost:5432 PostgreSQL (`gradlew localDb` 또는 `docker compose up -d db`) | Flyway | `SEED_DATA` (기본 O) |
+| `remote` | 공용 Supabase PostgreSQL (`.env` 의 `DB_URL`) | Flyway + validate | `SEED_DATA` (기본 X) |
 | `prod` | `DB_URL` 의 PostgreSQL | Flyway + validate | `SEED_DATA` (기본 X) |
 
 스키마 변경은 엔티티 수정 + `db/migration/V{n}__설명.sql` 추가로 관리합니다. (이미 적용된 V 파일은 수정하지 않기)
@@ -262,6 +274,7 @@ npm run dev              # http://localhost:5173 (/api 요청은 8080 으로 프
 | 4. DB 전환 | PostgreSQL 17 + Flyway 마이그레이션(V1), 프로필 분리(dev / local / prod), 루트 `.env` 설정, Docker Compose·Dockerfile·nginx 작성(배포 준비) |
 | 5. 로컬 PostgreSQL | Docker 없이 실행하는 `gradlew localDb` / `localDbStop`, 테스트용 PostgreSQL 17.11 고정 |
 | 6. 모바일·문서 | 모바일 레이아웃 개선(학생 상단 메뉴 3칸, 교사 탭 한 줄, 표 → 카드), README 현재 상태(로컬 전용)·변경 이력 정리 |
+| 7. 공용 DB | Supabase 연결용 `remote` 프로필, V2 마이그레이션(RLS·시간 기본값·테이블/컬럼 설명), DB 운영 가이드·사람별 계정 SQL (`docs/`) |
 
 ## 다음 단계 (예정)
 
