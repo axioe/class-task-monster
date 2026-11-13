@@ -1,0 +1,15 @@
+# 로컬 PostgreSQL(Docker: docker compose up -d db) 에 붙어 개발할 때 사용
+# 접속 정보는 루트 .env 의 POSTGRES_* 값을 그대로 사용한다.
+spring:
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:classmonster}
+    username: ${POSTGRES_USER:classmonster}
+    password: ${POSTGRES_PASSWORD:classmonster}
+  flyway:
+    enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+app:
+  seed-data: ${SEED_DATA:true}

@@ -88,6 +88,6 @@ public class DevDataInitializer implements ApplicationRunner {
                 new ExpressionOption("I'm sorry.", false)));
         missionRepository.save(mission);
 
-        log.info("[dev] 샘플 데이터 생성 완료 - 교사: teacher / 학생: jiwoo, minjun, seoyeon");
+        log.info("[seed] 샘플 데이터 생성 완료 - 교사: teacher / 학생: jiwoo, minjun, seoyeon");
     }
 }

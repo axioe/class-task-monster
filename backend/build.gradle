@@ -37,7 +37,12 @@ dependencies {
     runtimeOnly "io.jsonwebtoken:jjwt-impl:${jjwtVersion}"
     runtimeOnly "io.jsonwebtoken:jjwt-jackson:${jjwtVersion}"
 
-    // DB 확정 전까지 H2 사용 (JPA 기반이라 드라이버/설정만 바꾸면 교체 가능)
+    // 운영: 원격 PostgreSQL + Flyway 로 스키마 관리
+    runtimeOnly 'org.postgresql:postgresql'
+    implementation 'org.flywaydb:flyway-core'
+    runtimeOnly 'org.flywaydb:flyway-database-postgresql'
+
+    // 로컬 개발(dev 프로필): H2 인메모리
     runtimeOnly 'com.h2database:h2'
 
     compileOnly 'org.projectlombok:lombok'
@@ -45,6 +50,8 @@ dependencies {
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+    // Docker 없이 실제 PostgreSQL 로 마이그레이션·통합 테스트
+    testImplementation 'io.zonky.test:embedded-postgres:2.1.0'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
