@@ -8,6 +8,18 @@
       "port": 8080
     },
     {
+      "name": "localdb",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": ["/c", "backend\\gradlew.bat", "-p", "backend", "localDb", "--console=plain"],
+      "port": 5432
+    },
+    {
+      "name": "backend-local",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": ["/c", "backend\\gradlew.bat", "-p", "backend", "bootRun", "--console=plain", "--args=--spring.profiles.active=local"],
+      "port": 8080
+    },
+    {
       "name": "frontend",
       "runtimeExecutable": "npm",
       "runtimeArgs": ["--prefix", "frontend", "run", "dev"],

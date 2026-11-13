@@ -50,11 +50,33 @@ dependencies {
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
-    // Docker 없이 실제 PostgreSQL 로 마이그레이션·통합 테스트
+    // Docker 없이 실제 PostgreSQL 17 로 마이그레이션·통합 테스트 + 로컬 DB(localDb 태스크)
     testImplementation 'io.zonky.test:embedded-postgres:2.1.0'
+    testImplementation enforcedPlatform('io.zonky.test.postgres:embedded-postgres-binaries-bom:17.11.0')
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+// ===== 로컬 개발용 PostgreSQL (Docker·관리자 권한 불필요) =====
+// 실행: ./gradlew localDb        (Ctrl+C 로 종료, 데이터는 backend/.localdb 에 유지)
+// 종료: ./gradlew localDbStop    (터미널을 닫아 서버가 남아 있을 때)
+// 앱:   ./gradlew bootRun --args='--spring.profiles.active=local'
+tasks.register('localDb', JavaExec) {
+    group = 'local development'
+    description = '로컬 PostgreSQL 17 서버를 실행합니다 (루트 .env 의 POSTGRES_* 사용).'
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'com.classmonster.devtools.LocalPostgresServer'
+    workingDir = projectDir
+}
+
+tasks.register('localDbStop', JavaExec) {
+    group = 'local development'
+    description = '백그라운드에 남아 있는 로컬 PostgreSQL 서버를 종료합니다.'
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = 'com.classmonster.devtools.LocalPostgresServer'
+    workingDir = projectDir
+    args 'stop'
 }

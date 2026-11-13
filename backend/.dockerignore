@@ -1,4 +1,5 @@
 .gradle
+.localdb
 build
 bin
 out
