@@ -82,9 +82,10 @@ class-task-monster/
 |---|---|---|---|
 | A. Docker Compose 전체 실행 | 시연·배포와 같은 환경 | PostgreSQL (컨테이너) | http://localhost:3000 |
 | B. DB만 Docker + IDE 개발 | 일상 개발 | PostgreSQL (컨테이너) | http://localhost:5173 |
+| **B'. Docker 없이 로컬 PostgreSQL** | Docker 를 못 쓰는 PC 에서 개발 | PostgreSQL 17 (`gradlew localDb`) | http://localhost:5173 |
 | C. H2 빠른 실행 | DB 설치 없이 바로 확인 | H2 인메모리 (재시작 시 초기화) | http://localhost:5173 |
 
-먼저 환경 변수 파일을 만듭니다 (A, B 공통).
+먼저 환경 변수 파일을 만듭니다 (A, B 필수 / B' 는 없으면 기본값 `classmonster` 사용).
 
 ```bash
 cp .env.example .env     # 이후 POSTGRES_PASSWORD, JWT_SECRET 값 수정
@@ -109,6 +110,27 @@ cd frontend && npm install && npm run dev
 ```
 
 - `local` 프로필은 루트 `.env` 의 `POSTGRES_*` 값으로 `localhost:5432` 에 접속합니다.
+
+### B'. Docker 없이 로컬 PostgreSQL 17 (관리자 권한·설치 불필요)
+
+Docker Desktop 을 설치할 수 없는 환경(BIOS 가상화 꺼짐, 관리자 권한 없음 등)에서 사용합니다.
+Gradle 이 Maven Central 에서 PostgreSQL 17 실행 파일을 받아 프로젝트 안에서 실행합니다.
+
+```bash
+# 터미널 1: DB 실행 (Ctrl+C 로 종료)
+cd backend && ./gradlew localDb
+
+# 터미널 2: 백엔드
+cd backend && ./gradlew bootRun --args='--spring.profiles.active=local'
+
+# 터미널 3: 프론트엔드
+cd frontend && npm run dev
+```
+
+- 처음 실행할 때 `.env` 의 `POSTGRES_USER` 사용자와 `POSTGRES_DB` 데이터베이스를 자동으로 만듭니다.
+- 데이터는 `backend/.localdb/` 에 저장되어 재시작해도 유지됩니다. 초기화하려면 DB 를 끄고 이 폴더를 삭제하세요.
+- 터미널을 닫아 DB 가 백그라운드에 남았다면: `./gradlew localDbStop`
+- `local` 프로필이므로 Docker 의 `db` 서비스(방법 B)와 같은 설정으로 접속합니다. (둘 다 5432 포트라 동시에 실행하지 않기)
 
 ### C. H2 로 빠르게 실행 (기본 `dev` 프로필)
 
