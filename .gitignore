@@ -1,0 +1,27 @@
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+*.iml
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# Backend (Gradle / Spring)
+backend/.gradle/
+backend/build/
+backend/bin/
+backend/out/
+backend/*.log
+backend/data/
+
+# Frontend (Node / Vite)
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/*.log
+
+# Env
+.env
+.env.*
+!.env.example
