@@ -1,13 +1,15 @@
-# 로컬 개발용: H2 인메모리 DB + 샘플 데이터
+# 가장 가벼운 로컬 개발용: H2 인메모리 DB + 샘플 데이터 (DB 설치 불필요, 재시작 시 초기화)
 spring:
   datasource:
-    url: jdbc:h2:mem:classmonster;MODE=MySQL;DB_CLOSE_DELAY=-1
+    url: jdbc:h2:mem:classmonster;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH;DB_CLOSE_DELAY=-1
     username: sa
     password:
   h2:
     console:
       enabled: true
       path: /h2-console
+  flyway:
+    enabled: false
   jpa:
     hibernate:
       ddl-auto: create
