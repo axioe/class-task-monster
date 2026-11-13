@@ -1,0 +1,444 @@
+/* ===== 교사 관리 화면 ===== */
+.teacher-shell {
+  min-height: 100vh;
+}
+
+.teacher-main {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 24px 22px 48px;
+}
+
+.role-badge {
+  background: var(--success-soft);
+  color: var(--success);
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-size: 0.9rem;
+}
+
+.page-header-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.back-link {
+  font-weight: 700;
+  text-decoration: none;
+  align-self: flex-start;
+}
+
+/* 반 목록 */
+.classroom-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.classroom-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.classroom-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-strong);
+}
+
+.classroom-card-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.classroom-card-body h3 {
+  font-size: 1.4rem;
+}
+
+.classroom-card-arrow {
+  font-size: 2rem;
+  color: var(--border-strong);
+}
+
+/* 반 상세 헤더 */
+.classroom-hero {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.classroom-hero-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.classroom-hero-body h1 {
+  font-size: 2rem;
+}
+
+.classroom-hero .energy {
+  padding: 0;
+}
+
+/* 탭 */
+.tabs {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  border-bottom: 2px solid var(--border);
+}
+
+.tab {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: none;
+  background: none;
+  padding: 10px 16px;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--text-muted);
+  border-radius: 12px 12px 0 0;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px;
+}
+
+.tab:hover {
+  color: var(--text);
+}
+
+.tab.is-active {
+  color: var(--primary-ink);
+  border-bottom-color: var(--primary);
+  background: var(--primary-soft);
+}
+
+.tab-count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: var(--danger);
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 0 6px;
+}
+
+.tab-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* 폼 */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.form-grid-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.form-full {
+  grid-column: 1 / -1;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.section-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.filter-select {
+  width: auto;
+  min-width: 140px;
+}
+
+/* 표 */
+.table-wrap {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.table th {
+  text-align: left;
+  color: var(--text-muted);
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 8px 10px;
+  border-bottom: 2px solid var(--border);
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.cell-sub {
+  font-size: 0.85rem;
+  max-width: 320px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cell-actions {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+  white-space: nowrap;
+}
+
+.table-note {
+  margin-top: 10px;
+  font-size: 0.85rem;
+}
+
+.student-chip {
+  display: inline-block;
+  background: var(--primary-soft);
+  color: var(--primary-ink);
+  border-radius: 999px;
+  padding: 2px 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* 확인 대기 */
+.review-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.review-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.review-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.review-head h3 {
+  font-size: 1.3rem;
+}
+
+.review-time {
+  margin-left: auto;
+  font-size: 0.85rem;
+}
+
+/* 표현 미션 */
+.mission-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.option-fieldset {
+  border: 1.5px dashed var(--border-strong);
+  border-radius: var(--radius);
+  padding: 14px;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.option-fieldset legend {
+  padding: 0 6px;
+  font-weight: 700;
+  color: var(--text-muted);
+  font-size: 0.92rem;
+}
+
+.option-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+}
+
+.correct-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--success);
+  white-space: nowrap;
+}
+
+.correct-toggle input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--success);
+}
+
+.add-option {
+  align-self: flex-start;
+}
+
+.mission-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mission-item {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mission-item.is-today {
+  border-color: var(--primary);
+  background: var(--surface-soft);
+}
+
+.mission-item-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.mission-item-head .cell-actions {
+  margin-left: auto;
+}
+
+.mission-date {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.today-tag {
+  background: var(--primary);
+  color: #fff;
+  border-radius: 999px;
+  padding: 0 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.option-chips {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.option-chips li {
+  border: 1.5px solid var(--border-strong);
+  border-radius: 999px;
+  padding: 2px 12px;
+  font-size: 0.9rem;
+}
+
+.option-chips li.is-correct {
+  border-color: var(--success);
+  background: var(--success-soft);
+  color: var(--success);
+  font-weight: 700;
+}
+
+/* 설정 */
+.settings-help {
+  margin-bottom: 14px;
+}
+
+.settings-saved {
+  margin-top: 12px;
+}
+
+.danger-zone {
+  border-color: #f4c7d1;
+}
+
+@media (max-width: 760px) {
+  .teacher-main {
+    padding: 16px 16px 40px;
+  }
+
+  .role-badge {
+    display: none;
+  }
+
+  .form-grid,
+  .form-grid-3 {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .classroom-hero {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .classroom-hero svg {
+    align-self: center;
+  }
+
+  .classroom-hero .energy {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .classroom-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
