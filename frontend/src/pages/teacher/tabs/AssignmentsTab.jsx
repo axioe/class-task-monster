@@ -165,17 +165,21 @@ export default function AssignmentsTab({ classroomId, students, onChanged }) {
               <tbody>
                 {assignments.map((a) => (
                   <tr key={a.id}>
-                    <td>
+                    <td data-label="학생">
                       <span className="student-chip">{a.studentNickname}</span>
                     </td>
-                    <td>
-                      <strong>{a.title}</strong>
-                      {a.description && <div className="muted cell-sub">{a.description}</div>}
+                    <td data-label="과제">
+                      <div>
+                        <strong>{a.title}</strong>
+                        {a.description && <div className="muted cell-sub">{a.description}</div>}
+                      </div>
                     </td>
-                    <td>
+                    <td data-label="상태">
                       <StatusBadge status={a.status} />
                     </td>
-                    <td className="muted">{a.teacherComment || '-'}</td>
+                    <td data-label="피드백" className="muted">
+                      {a.teacherComment || '-'}
+                    </td>
                     <td className="cell-actions">
                       <button type="button" className="btn btn-ghost btn-sm" onClick={() => setEditing({ ...a })}>
                         수정

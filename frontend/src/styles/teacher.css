@@ -441,4 +441,92 @@
   .classroom-grid {
     grid-template-columns: minmax(0, 1fr);
   }
+
+  /* 탭: 5개가 한 화면에 들어오도록 균등 분할 */
+  .tabs {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 2px;
+    overflow: visible;
+  }
+
+  .tab {
+    justify-content: center;
+    padding: 8px 2px;
+    font-size: 0.92rem;
+    text-align: center;
+  }
+
+  .tab-count {
+    min-width: 18px;
+    height: 18px;
+    font-size: 0.7rem;
+    padding: 0 4px;
+  }
+
+  /* 표 → 카드: 각 행을 카드로, 칸 이름은 data-label 로 표시 */
+  .table-wrap {
+    overflow-x: visible;
+  }
+
+  .table thead {
+    display: none;
+  }
+
+  .table,
+  .table tbody,
+  .table tr,
+  .table td {
+    display: block;
+    width: 100%;
+  }
+
+  .table tr {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 12px;
+    margin-bottom: 10px;
+  }
+
+  .table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    padding: 6px 0;
+    border-bottom: 1px dashed var(--border);
+    text-align: right;
+  }
+
+  .table td:last-child {
+    border-bottom: none;
+  }
+
+  .table td[data-label]::before {
+    content: attr(data-label);
+    flex-shrink: 0;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-align: left;
+  }
+
+  .table td.cell-actions {
+    justify-content: flex-end;
+    padding-top: 10px;
+  }
+
+  .cell-sub {
+    max-width: none;
+    white-space: normal;
+  }
+
+  .section-head {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-select {
+    width: 100%;
+  }
 }

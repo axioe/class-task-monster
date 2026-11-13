@@ -132,13 +132,15 @@ export default function StudentsTab({ classroomId, students, onChanged }) {
               <tbody>
                 {students.map((s) => (
                   <tr key={s.id}>
-                    <td>
+                    <td data-label="별명">
                       <span className="student-chip">{s.nickname}</span>
                     </td>
-                    <td className="muted">{s.loginId}</td>
-                    <td>{s.foodCount}개</td>
-                    <td>{s.approvedAssignmentCount}개</td>
-                    <td>
+                    <td data-label="아이디" className="muted">
+                      {s.loginId}
+                    </td>
+                    <td data-label="보유 먹이">{s.foodCount}개</td>
+                    <td data-label="확인된 과제">{s.approvedAssignmentCount}개</td>
+                    <td data-label="표현 정확도">
                       {s.feedingAttemptCount === 0
                         ? '-'
                         : `${Math.round((s.feedingSuccessCount / s.feedingAttemptCount) * 100)}% (${s.feedingSuccessCount}/${s.feedingAttemptCount})`}
