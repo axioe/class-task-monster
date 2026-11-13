@@ -1,0 +1,12 @@
+# 운영용: DB 확정 후 드라이버 의존성(build.gradle)과 아래 접속 정보만 채우면 됩니다.
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+app:
+  seed-data: false
