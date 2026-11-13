@@ -9,6 +9,20 @@
 - 학생별 순위 대신, 각자의 도전이 우리 반 성장에 기여하는 구조입니다.
 - 몬스터는 참여를 돕고, 실제 학습 여부는 교사가 과제 수행으로 확인합니다.
 
+## 현재 상태
+
+> ⚠️ **현재는 로컬 개발 환경에서만 동작합니다.** 외부에서 접속할 수 있는 서버에는 아직 배포하지 않았습니다.
+
+| 항목 | 상태 |
+|---|---|
+| 로컬 실행 (H2 / 로컬 PostgreSQL 17) | ✅ 동작 확인 (학생·교사 화면, 데스크톱·모바일) |
+| 자동 테스트 (H2 + PostgreSQL 17.11) | ✅ 통과 |
+| Docker Compose 구성 (`docker-compose.yml`, Dockerfile) | 📝 작성 완료 · **실제 컨테이너 실행은 미검증** (개발 PC 에 Docker 미설치) |
+| 서버 배포 / 도메인 / HTTPS | ⏳ 진행 전 |
+
+- 로컬 실행 시 권장 방법: **B'. Docker 없이 로컬 PostgreSQL** (아래 [실행 방법](#실행-방법) 참고)
+- 샘플 계정(`teacher` / `jiwoo` 등)과 `.env.example` 의 기본 비밀번호·JWT 키는 **로컬 확인용**입니다. 배포 시 반드시 변경하세요.
+
 ## 파일럿 범위
 
 과제 카드 → 교사 확인 → 먹이 획득 → 몬스터 성장
@@ -29,9 +43,10 @@
 | 구분 | 기술 |
 |---|---|
 | Backend | Java 21, Spring Boot 3.5, Spring Security, JWT(jjwt), Spring Data JPA, Gradle |
-| Database | PostgreSQL 17 (Docker), Flyway 마이그레이션 · 빠른 개발용 H2 |
-| Infra | Docker Compose (PostgreSQL + Spring Boot + nginx) |
-| Frontend | React 19, Vite 7, React Router 7, axios |
+| Database | PostgreSQL 17 + Flyway 마이그레이션 (로컬: `gradlew localDb`) · 빠른 개발용 H2 |
+| Frontend | React 19, Vite 7, React Router 7, axios (반응형: 데스크톱·모바일) |
+| Test | JUnit 5, MockMvc, embedded-postgres (Docker 없이 실제 PostgreSQL 로 통합 테스트) |
+| Infra (배포 준비) | Docker Compose (PostgreSQL + Spring Boot + nginx) — 미검증 |
 
 ## 프로젝트 구조
 
@@ -40,7 +55,12 @@ class-task-monster/
 ├─ docker-compose.yml             # db + backend + frontend 전체 실행
 ├─ .env.example                   # 환경 변수 예시 (복사해서 .env 로 사용)
 ├─ backend/                       # Spring Boot API 서버 (Dockerfile 포함)
-│  └─ src/main/resources/db/migration/   # Flyway SQL (V1__init_schema.sql ...)
+│  ├─ .localdb/                   # 로컬 PostgreSQL 데이터 (gradlew localDb, git 제외)
+│  ├─ src/test/java/com/classmonster/
+│  │  ├─ PilotFlowIntegrationTest.java          # 파일럿 흐름 통합 테스트 (H2)
+│  │  ├─ PostgresPilotFlowIntegrationTest.java  # 같은 테스트를 PostgreSQL 17 + Flyway 로
+│  │  └─ devtools/LocalPostgresServer.java      # gradlew localDb 실행기
+│  ├─ src/main/resources/db/migration/          # Flyway SQL (V1__init_schema.sql ...)
 │  └─ src/main/java/com/classmonster/
 │     ├─ controller/              # 요청/응답 (REST API)
 │     ├─ service/                 # 비즈니스 로직
@@ -76,22 +96,32 @@ class-task-monster/
 
 **교사 관리**: 내 반 목록·만들기 → 반 관리 탭 (확인 대기 / 과제 지정 / 학생 / 표현 미션 / 반 설정)
 
+**모바일 (폭 760px 이하)**
+- 학생: 왼쪽 메뉴가 상단 3칸 메뉴로 바뀌고, 몬스터 → 오늘 도전 → 먹이 주기 → 성장 소식 순서로 세로 배치
+- 교사: 반 관리 탭 5개를 한 줄로 균등 배치, 학생·과제 표는 행마다 카드 형태로 표시
+
 ## 실행 방법
 
-| 방법 | 용도 | DB | 접속 주소 |
-|---|---|---|---|
-| A. Docker Compose 전체 실행 | 시연·배포와 같은 환경 | PostgreSQL (컨테이너) | http://localhost:3000 |
-| B. DB만 Docker + IDE 개발 | 일상 개발 | PostgreSQL (컨테이너) | http://localhost:5173 |
-| **B'. Docker 없이 로컬 PostgreSQL** | Docker 를 못 쓰는 PC 에서 개발 | PostgreSQL 17 (`gradlew localDb`) | http://localhost:5173 |
-| C. H2 빠른 실행 | DB 설치 없이 바로 확인 | H2 인메모리 (재시작 시 초기화) | http://localhost:5173 |
+> 모든 방법은 **로컬 PC 에서 실행**하는 방식입니다. (외부 배포 전)
 
-먼저 환경 변수 파일을 만듭니다 (A, B 필수 / B' 는 없으면 기본값 `classmonster` 사용).
+| 방법 | 용도 | DB | 접속 주소 | 확인 상태 |
+|---|---|---|---|---|
+| A. Docker Compose 전체 실행 | 시연·배포와 같은 환경 | PostgreSQL (컨테이너) | http://localhost:3000 | 미검증 |
+| B. DB만 Docker + IDE 개발 | 일상 개발 | PostgreSQL (컨테이너) | http://localhost:5173 | 미검증 |
+| **B'. Docker 없이 로컬 PostgreSQL** (권장) | Docker 를 못 쓰는 PC 에서 개발 | PostgreSQL 17 (`gradlew localDb`) | http://localhost:5173 | ✅ |
+| C. H2 빠른 실행 | DB 설치 없이 바로 확인 | H2 인메모리 (재시작 시 초기화) | http://localhost:5173 | ✅ |
+
+필요한 도구: **Java 21**, **Node.js 22 이상** (A, B 는 Docker Desktop 추가 필요)
+
+환경 변수 파일을 만듭니다 (A, B 필수 / B', C 는 없으면 기본값 사용).
 
 ```bash
 cp .env.example .env     # 이후 POSTGRES_PASSWORD, JWT_SECRET 값 수정
 ```
 
-### A. Docker Compose 전체 실행 (Docker Desktop 필요)
+### A. Docker Compose 전체 실행 (Docker Desktop 필요 · 미검증)
+
+> Docker Desktop 은 BIOS 가상화(VT-x)와 Windows "가상 머신 플랫폼"(WSL2)이 켜져 있어야 설치·실행됩니다.
 
 ```bash
 docker compose up -d --build
@@ -154,14 +184,14 @@ npm run dev              # http://localhost:5173 (/api 요청은 8080 으로 프
 
 - API: http://localhost:8080 (Windows 는 `gradlew.bat`)
 - H2 콘솔 (dev): http://localhost:8080/h2-console (JDBC URL `jdbc:h2:mem:classmonster`, 사용자 `sa`)
-- 테스트: `./gradlew test` — H2 와 **실제 PostgreSQL**(embedded, Docker 불필요) 두 환경에서 같은 흐름 테스트를 실행합니다.
+- 테스트: `./gradlew test` — H2 와 **실제 PostgreSQL 17.11**(embedded, Docker 불필요) 두 환경에서 같은 흐름 테스트를 실행합니다.
 
 ### 프로필
 
 | 프로필 | DB | 스키마 | 샘플 데이터 |
 |---|---|---|---|
-| `dev` (기본) | H2 인메모리 | JPA 자동 생성 | O |
-| `local` | 로컬 PostgreSQL (`docker compose up -d db`) | Flyway | `SEED_DATA` (기본 O) |
+| `dev` (기본) | H2 인메모리 (PostgreSQL 호환 모드) | JPA 자동 생성 | O |
+| `local` | localhost:5432 PostgreSQL (`gradlew localDb` 또는 `docker compose up -d db`) | Flyway | `SEED_DATA` (기본 O) |
 | `prod` | `DB_URL` 의 PostgreSQL | Flyway + validate | `SEED_DATA` (기본 X) |
 
 스키마 변경은 엔티티 수정 + `db/migration/V{n}__설명.sql` 추가로 관리합니다. (이미 적용된 V 파일은 수정하지 않기)
@@ -221,3 +251,20 @@ npm run dev              # http://localhost:5173 (/api 요청은 8080 으로 프
 | GET | `/api/student/growth` | 성장 기록 (반 성장 소식 전체, 내 먹이 주기 기록) |
 
 에러 응답 형식: `{ "code": "NO_FOOD", "message": "먹이가 없어요. ...", "fieldErrors": [] }`
+
+## 변경 이력
+
+| 단계 | 내용 |
+|---|---|
+| 1. 초기 설정 | README, .gitignore |
+| 2. 백엔드 | Spring Boot MVC 계층 구조, JWT 인증, 반·학생·과제·표현 미션·먹이·성장 API, H2 + 샘플 데이터, 파일럿 흐름 통합 테스트 |
+| 3. 프론트엔드 | React 학생 화면(시안 기준 메인·나의 과제·성장 기록), 교사 관리 화면(반 목록·반 관리 탭), 몬스터 SVG |
+| 4. DB 전환 | PostgreSQL 17 + Flyway 마이그레이션(V1), 프로필 분리(dev / local / prod), 루트 `.env` 설정, Docker Compose·Dockerfile·nginx 작성(배포 준비) |
+| 5. 로컬 PostgreSQL | Docker 없이 실행하는 `gradlew localDb` / `localDbStop`, 테스트용 PostgreSQL 17.11 고정 |
+| 6. 모바일·문서 | 모바일 레이아웃 개선(학생 상단 메뉴 3칸, 교사 탭 한 줄, 표 → 카드), README 현재 상태(로컬 전용)·변경 이력 정리 |
+
+## 다음 단계 (예정)
+
+- Docker Desktop 사용 가능한 환경에서 `docker compose up` 실제 실행 검증
+- 서버 배포 (호스팅 선택, 도메인·HTTPS, 운영용 비밀번호·JWT 키 설정)
+- 파일럿 운영 후 교사용 지표(과제 정확도, 다음 도전 참여) 화면 보강

@@ -669,17 +669,26 @@
   }
 
   .side-nav {
-    flex-direction: row;
-    overflow-x: auto;
-    padding: 10px 16px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+    padding: 8px 16px;
     border-right: none;
     border-bottom: 1px solid var(--border);
   }
 
   .side-nav-item {
-    flex-shrink: 0;
-    font-size: 1rem;
-    padding: 8px 12px;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+    font-size: 0.95rem;
+    padding: 6px 4px;
+    text-align: center;
+  }
+
+  .side-nav-icon {
+    width: 28px;
+    height: 28px;
   }
 
   .side-nav-deco {
