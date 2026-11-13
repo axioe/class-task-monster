@@ -17,7 +17,7 @@
 |---|---|
 | 로컬 실행 (H2 / 로컬 PostgreSQL 17) | ✅ 동작 확인 (학생·교사 화면, 데스크톱·모바일) |
 | 자동 테스트 (H2 + PostgreSQL 17.11) | ✅ 통과 |
-| 공용 DB (Supabase PostgreSQL, Seoul) | 🔧 프로젝트 생성·`remote` 프로필 준비 완료 — 운영 가이드: [docs/DATABASE.md](docs/DATABASE.md) |
+| 공용 DB (Supabase PostgreSQL, Seoul) | 🔧 프로젝트 생성·`remote` 프로필 준비 완료, **실제 연결은 미확인** ([추후 작업](#추후-작업) 1번) — 운영 가이드: [docs/DATABASE.md](docs/DATABASE.md) |
 | Docker Compose 구성 (`docker-compose.yml`, Dockerfile) | 📝 작성 완료 · **실제 컨테이너 실행은 미검증** (개발 PC 에 Docker 미설치) |
 | 서버 배포 / 도메인 / HTTPS | ⏳ 진행 전 |
 
