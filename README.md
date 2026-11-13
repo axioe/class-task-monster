@@ -17,6 +17,7 @@
 |---|---|
 | 로컬 실행 (H2 / 로컬 PostgreSQL 17) | ✅ 동작 확인 (학생·교사 화면, 데스크톱·모바일) |
 | 자동 테스트 (H2 + PostgreSQL 17.11) | ✅ 통과 |
+| 공용 DB (Supabase PostgreSQL, Seoul) | 🔧 프로젝트 생성·`remote` 프로필 준비 완료, **실제 연결은 미확인** ([추후 작업](#추후-작업) 1번) — 운영 가이드: [docs/DATABASE.md](docs/DATABASE.md) |
 | Docker Compose 구성 (`docker-compose.yml`, Dockerfile) | 📝 작성 완료 · **실제 컨테이너 실행은 미검증** (개발 PC 에 Docker 미설치) |
 | 서버 배포 / 도메인 / HTTPS | ⏳ 진행 전 |
 
@@ -162,6 +163,16 @@ cd frontend && npm run dev
 - 터미널을 닫아 DB 가 백그라운드에 남았다면: `./gradlew localDbStop`
 - `local` 프로필이므로 Docker 의 `db` 서비스(방법 B)와 같은 설정으로 접속합니다. (둘 다 5432 포트라 동시에 실행하지 않기)
 
+### D. 공용 DB(Supabase)에 붙여 실행 (`remote` 프로필)
+
+여러 사람이 같은 데이터를 보고 관리할 때 사용합니다. 접속 정보 입력 방법·**DBeaver 연결**·테이블 설명·수정 규칙·백업은 **[docs/DATABASE.md](docs/DATABASE.md)**, 바로 실행할 수 있는 관리용 SQL 은 **[docs/sql/maintenance.sql](docs/sql/maintenance.sql)** 에 있습니다. (관리용 SQL 은 `MaintenanceSqlTest` 가 실제 스키마에서 실행되는지 자동 검사)
+
+```bash
+# .env 에 DB_URL / DB_USERNAME / DB_PASSWORD 입력 후
+cd backend && ./gradlew bootRun --args='--spring.profiles.active=remote'
+cd frontend && npm run dev
+```
+
 ### C. H2 로 빠르게 실행 (기본 `dev` 프로필)
 
 ```bash
@@ -192,6 +203,7 @@ npm run dev              # http://localhost:5173 (/api 요청은 8080 으로 프
 |---|---|---|---|
 | `dev` (기본) | H2 인메모리 (PostgreSQL 호환 모드) | JPA 자동 생성 | O |
 | `local` | localhost:5432 PostgreSQL (`gradlew localDb` 또는 `docker compose up -d db`) | Flyway | `SEED_DATA` (기본 O) |
+| `remote` | 공용 Supabase PostgreSQL (`.env` 의 `DB_URL`) | Flyway + validate | `SEED_DATA` (기본 X) |
 | `prod` | `DB_URL` 의 PostgreSQL | Flyway + validate | `SEED_DATA` (기본 X) |
 
 스키마 변경은 엔티티 수정 + `db/migration/V{n}__설명.sql` 추가로 관리합니다. (이미 적용된 V 파일은 수정하지 않기)
@@ -262,9 +274,37 @@ npm run dev              # http://localhost:5173 (/api 요청은 8080 으로 프
 | 4. DB 전환 | PostgreSQL 17 + Flyway 마이그레이션(V1), 프로필 분리(dev / local / prod), 루트 `.env` 설정, Docker Compose·Dockerfile·nginx 작성(배포 준비) |
 | 5. 로컬 PostgreSQL | Docker 없이 실행하는 `gradlew localDb` / `localDbStop`, 테스트용 PostgreSQL 17.11 고정 |
 | 6. 모바일·문서 | 모바일 레이아웃 개선(학생 상단 메뉴 3칸, 교사 탭 한 줄, 표 → 카드), README 현재 상태(로컬 전용)·변경 이력 정리 |
+| 7. 공용 DB | Supabase 연결용 `remote` 프로필, V2 마이그레이션(RLS·시간 기본값·테이블/컬럼 설명), DB 운영 가이드·사람별 계정 SQL (`docs/`) |
 
-## 다음 단계 (예정)
+## 추후 작업
 
-- Docker Desktop 사용 가능한 환경에서 `docker compose up` 실제 실행 검증
-- 서버 배포 (호스팅 선택, 도메인·HTTPS, 운영용 비밀번호·JWT 키 설정)
-- 파일럿 운영 후 교사용 지표(과제 정확도, 다음 도전 참여) 화면 보강
+### 1. 공용 DB (Supabase) 연결 마무리 — 우선
+Supabase 프로젝트(`class-task-monster`, Seoul)는 생성되어 있고 코드 준비(`remote` 프로필, V2 마이그레이션, 문서)도 끝났습니다. **실제 연결은 아직 확인하지 않았습니다.**
+- [ ] 대시보드 **Connect → Direct → Type: JDBC, Method: Session pooler** 값을 루트 `.env` 의 `DB_URL` / `DB_USERNAME` / `DB_PASSWORD` 에 입력 ([docs/DATABASE.md](docs/DATABASE.md) 1-2)
+- [ ] `./gradlew bootRun --args='--spring.profiles.active=remote'` 로 실행 → Flyway V1, V2 적용 확인 (대시보드 Last migration 표시)
+- [ ] Supabase SQL Editor 에서 최초 1회: `ALTER TABLE public.flyway_schema_history ENABLE ROW LEVEL SECURITY;`
+- [ ] 시연 데이터가 필요하면 첫 실행만 `SEED_DATA=true`
+- [ ] DBeaver 연결 (SSL require, Connection type: Production) 후 `docs/sql/maintenance.sql` 동작 확인
+- [ ] 여러 사람이 관리한다면 `docs/db-roles.sql` 로 사람별 계정(수정용·조회용) 발급
+- [ ] Supabase 대시보드의 GitHub 연동은 사용하지 않음 (스키마는 Flyway 로만 관리)
+- [ ] 개발용 / 실제 학생용 Supabase 프로젝트 분리 검토
+
+### 2. 배포
+- [ ] Docker Desktop 을 쓸 수 있는 환경(BIOS VT-x + WSL2)에서 `docker compose up -d --build` 실제 실행 검증
+- [ ] 호스팅 선택 (백엔드: 컨테이너 호스팅 / 프론트엔드: 정적 호스팅 또는 nginx 컨테이너), DB 는 Supabase 사용
+- [ ] 운영용 값 설정: 새 `JWT_SECRET`(32바이트 이상), DB 비밀번호, `CORS_ALLOWED_ORIGINS`, `SEED_DATA=false`
+- [ ] 도메인·HTTPS 연결
+- [ ] 정기 백업 (`pg_dump`, [docs/DATABASE.md](docs/DATABASE.md) 6장) 절차 정하기
+
+### 3. 기능 보강 (파일럿 운영 후)
+- [ ] 교사용 분석 화면: 과제 수행 정확도, 다음 도전 참여 여부 (현재는 학생 탭 지표 + `maintenance.sql` 분석 쿼리)
+- [ ] 과제 일괄 지정 (여러 학생에게 같은 과제)
+- [ ] 표현 미션 미리 여러 날 등록 / 지난 미션 복사
+- [ ] 성장 단계 기준(알 10 / 아기 30)과 먹이당 에너지를 반별로 설정
+- [ ] 학생 비밀번호 초기화 안내 흐름 (현재는 교사가 학생 탭에서 직접 변경)
+
+### 4. 기술 부채
+- [ ] JWT Refresh Token (현재 Access Token 12시간 만료 시 재로그인)
+- [ ] 프론트엔드 테스트(컴포넌트·E2E) 추가 — 현재는 백엔드 통합 테스트만 있음
+- [ ] `gradlew localDb` 안내 문구가 일부 터미널에서 한글이 깨져 보이는지 확인
+- [ ] GitHub Actions 로 `./gradlew test` · `npm run build` 자동 실행 (PR 마다)
